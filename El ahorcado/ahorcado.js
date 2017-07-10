@@ -1,16 +1,4 @@
-
-function imprimirHTML (M) {
-  var n = M.length;
-  for (var i = 0; i < n; i++) {
-        console.log(M[i]) ;
-  }
-}
-function imprimirMatriz (M) {
-  var n = M.length;
-  for (var i = 0; i < n; i++) {
-        console.log(M[i]) ;
-  }
-}
+//Para poder ver el proceso del juego, es necesaria la consola
 function obtenerPalabraSecreta() {
   var libreriaPalabras = ["m u l t i m e d i a", "i n t e r n a u t a", "s e r v i d o r", "p r o t o c o l o", "c o r t a f u e g o s",
   "n a v e g a d o r", "n o d o", "m a r c o", "p a g i n a", "t e l a r a ñ a",
@@ -23,46 +11,70 @@ function obtenerPalabraSecreta() {
    var palabra = cadena.split(" ")
   return palabra;
 }
-var hombre =  [        "________",
-                       "   |\n",
-                       "   |\n",
-                       "   |\n",
-                       "   O\n",
-                        "  /|\\\n",
-                       "  / \\\n",
-                       "         ",
-                       "         ",
-                       "________"];
+var hombre =  [       "________\n",
+                      "   |\n",
+                      "   |\n",
+                      "   |\n",
+                      "   O\n",
+                      "  /|\\\n",
+                      "  / \\\n",
+                      "        \n",
+                      "        \n",
+                      "________\n"];
 var palabra = obtenerPalabraSecreta ();
-console.log(palabra);
-//imprimirMatriz(hombre);
-function mostrarPalabra (palabra){
+//Declaramos un array para poder compararlo
+var palabraAdivinar = adivinarPalabra(palabra);
+//Hacemos una función que nos entregue los valores de la palabra para adivinar en x
+function adivinarPalabra (palabra){
   var x = [];
   for (var i = 0; i < palabra.length; i++){
     x[i] = "*";
   }
   return x;
 }
-//console.log(mostrarPalabra(palabra));
-var juego = mostrarPalabra(palabra);
-function userLetras (palabra){
-  var alerta = alert("Adivina la siguiente palabra \n" + juego);
-  for(var i = 0; i < 10; i++){
-    var user = prompt("Intento " + (parseInt(i)+1) + " de 10 \n Ingrese aquí su letra");
+console.log(adivinarPalabra(palabra));
+//Una función que devuelve el valor booleano cuando compara las palabras
+function compararPalabra (palabra, palabraAdivinar){
+  var palabraString = palabra.toString().replace(/,/g,"");
+  var palabraAdivinarString = palabraAdivinar.toString().replace(/,/g,"");
+  if (palabraString == palabraAdivinarString){
+    return true;
+  } else {
+    return false;
+  }
+}
+//Función que determinar el juego
+function intentos(palabra){
+  var n = 0;
+  for (var i = 0; n < 10; i++){
+    var bo = false;
+    var user = prompt("Lo has intentado " + (parseInt(i)+1) + " veces \n Ingresa aquí la posible letra");
     for (var j = 0; j < palabra.length; j++){
-      if(user == palabra[j]){
-        juego[j] = user;
+      if(user.toLowerCase() == palabra[j]){
+        bo = true;
+        palabraAdivinar[j] = user;
+        console.log("Sí! ¡Correcto! \n Palabra: " + palabraAdivinar.toString().replace(/,/g," "));
       }
     }
-    var res = alert(juego);
-    if( juego == palabra){
-      break;
-      alert("Ganaste!! " + juego);
+    if(bo == false){
+      n += 1;
+      console.log("¡Incorrecto!, vas a matar a un hombre :( \n Sigue intentando y sálvalo \n" + hombre.slice(0,n));
     }
-    else if ((juego !== palabra) && (i == 9)){
-      alert("Acabas de matar a un hombre, la palabra era " + palabra);
+    if(compararPalabra(palabra, palabraAdivinar) == true){
+      alert("Felicitaciones, ganaste! :)");
+      console.log("Felicitaciones, ganaste! :)");
+      break;
+    }
+    else if ((n==10) && (compararPalabra(palabra, palabraAdivinar) == false)){
+      alert("Lo siento, mataste a un hombre :(");
+      console.log("Lo siento, mataste a un hombre :( \n" + hombre + "\n La palabra era " + palabra.toString().replace(/,/g, " "));
     }
   }
-
 }
-userLetras(palabra);
+//Función para poder comenzar el juego
+function jugar (){
+  alert("Hola, adivina la siguiente palabra \n" + palabraAdivinar.toString().replace(/,/g, " "));
+  console.log("Hola, adivina la siguiente palabra \n" + palabraAdivinar.toString().replace(/,/g, " "));
+  intentos(palabra);
+}
+jugar();
